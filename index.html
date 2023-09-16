@@ -1,33 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+<html>
+  <head>
     <title>Lop CNPM</title>
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body>
     <div id="home">
-        <div class="header">
-            <span>Dang nhap</span>
-            <span>x</span>
+      <div id="login-form">
+        <div class="login-form-header">
+          <span class="title-header">Đăng nhập</span>
+          <span style="position: absolute; top: 19px; right: 19px">X</span>
         </div>
         <div id="login-body">
-            <div>ten dang nhap</div>
-            <input type="text">
-            <div><span>mat khau</span>
-                <span><a href="https://www.google.com.vn/">Quen mat khau</a></span>
-            </div>
-            <input type="password"/>
-            <div><button>Dang nhap</button></div>
-            <p>Hoac</p>
-            <div>
-                <span>
-                <button>Facebook</button>
-                <button>google</button>
-                </span>
-            </div>
-            <p>Ban chua co tai khoan <a href="https://www.google.com.vn/">Dang ki ngay</a></p>
+          <div class="label-input">Tên đăng nhập</div>
+          <input type="text" />
+          <div
+            style="
+              margin-top: 40px;
+              display: flex;
+              justify-content: space-between;
+              width: 462px;
+            "
+          >
+            <span class="label-input">Mật khẩu</span
+            ><span
+              ><a href="google.com" id="forgot-password"
+                >Quên mật khẩu?</a
+              ></span
+            >
+          </div>
+          <input type="password" />
+          <div class="login-button">Đăng nhập</div>
+          <p class="login-with">hoặc đăng nhập bằng</p>
+          <div
+            style="
+              display: flex;
+              justify-content: space-around;
+              padding-top: 10px;
+            "
+          >
+            <span class="otherway"
+              ><i
+                class="fa fa-brands fa-facebook"
+                style="font-size: 16px; padding-right: 5px"
+              ></i
+              >Facebook</span
+            >
+            <span class="otherway"
+              ><i
+                class="fa fa-brands fa-google"
+                style="font-size: 16px; padding-right: 5px"
+              ></i
+              >Google</span
+            >
+          </div>
+          <p class="footer">
+            Bạn chưa có tài khoản? <a href="google.com">Đăng ký ngay!</a>
+          </p>
         </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>
