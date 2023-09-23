@@ -1,4 +1,31 @@
-<script></script>
+<script>
+import { Post } from "../utils/api.js";
+export default {
+  name: "App",
+  data() {
+    return {
+      username: "",
+      password: "",
+    };
+  },
+  methods: {
+    async login() {
+      if (this.username && this.password) {
+        let response = await Post("login", {
+          username: this.username,
+          password: this.password,
+        });
+        if (response.msg === "Dang nhap thanh cong") {
+          this.$router.push("/home");
+          isLogin = true;
+        } else {
+          alert("Sai tai khoan mat khau");
+        }
+      }
+    },
+  },
+};
+</script>
 
 <template>
   <div id="home">
@@ -9,7 +36,7 @@
       </div>
       <div id="login-body">
         <div class="label-input">Tên đăng nhập</div>
-        <input type="text" />
+        <input type="text" v-model="username" />
         <div
           style="
             margin-top: 40px;
@@ -23,8 +50,18 @@
             ><a href="google.com" id="forgot-password">Quên mật khẩu?</a></span
           >
         </div>
-        <input type="password" />
-        <div class="login-button">Đăng nhập</div>
+        <input type="password" v-model="password" />
+        <div
+          class="login-button"
+          @click="login()"
+          :style="
+            this.username && this.password
+              ? {}
+              : { color: '#E5E6EC', background: '#BDBDBD' }
+          "
+        >
+          Đăng nhập
+        </div>
         <p class="login-with">hoặc đăng nhập bằng</p>
         <div
           style="
@@ -152,7 +189,9 @@ body {
   font-weight: 500;
   line-height: normal;
 }
-
+.login-button:hover {
+  cursor: pointer;
+}
 .login-with {
   margin-top: 30px;
   color: var(--light-transparent-greyscale-65, rgba(0, 0, 0, 0.65));

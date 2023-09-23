@@ -4,7 +4,7 @@
   <div id="home">
     <div id="login-form">
       <div class="login-form-header">
-        <span class="title-header">Đăng ky</span>
+        <span class="title-header">Đăng ký</span>
         <span style="position: absolute; top: 19px; right: 19px">X</span>
       </div>
       <div id="login-body">
