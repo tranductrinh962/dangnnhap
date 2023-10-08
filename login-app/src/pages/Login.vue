@@ -1,7 +1,8 @@
 <script>
 import { Post } from "../utils/api.js";
+
 export default {
-  name: "App",
+  name: "Login",
   data() {
     return {
       username: "",
@@ -10,22 +11,32 @@ export default {
   },
   methods: {
     async login() {
-      if (this.username && this.password) {
-        let response = await Post("login", {
-          username: this.username,
-          password: this.password,
-        });
-        if (response.msg === "Dang nhap thanh cong") {
-          this.$router.push("/home");
-          isLogin = true;
-        } else {
-          alert("Sai tai khoan mat khau");
-        }
-      }
-    },
-  },
-};
+  if (this.username && this.password) {
+    const response = await Post("login", {
+      username: this.username,
+      password: this.password,
+    });
+
+    if (Array.isArray(response) && response.length > 0) {
+      // Đăng nhập thành công, bạn có thể thực hiện các hành động sau, ví dụ: chuyển hướng đến trang chính
+      localStorage.setItem("username", this.username);
+      localStorage.setItem("userId", response[0].id); // Lưu ID người dùng (điều này giả định bạn có một ID trong phản hồi)
+      alert("Đăng nhập thành công!");
+      this.$router.push("/home"); // Chuyển hướng đến trang Home
+    } else {
+      // Đăng nhập thất bại, xử lý thông báo lỗi hoặc hiển thị lỗi cho người dùng
+      alert("Sai tên đăng nhập hoặc mật khẩu.");
+    }
+  } else {
+    alert("Vui lòng nhập tên đăng nhập và mật khẩu.");
+  }
+}
+}
+}
+
+
 </script>
+
 
 <template>
   <div id="home">
@@ -36,7 +47,7 @@ export default {
       </div>
       <div id="login-body">
         <div class="label-input">Tên đăng nhập</div>
-        <input type="text" v-model="username" />
+        <input type="text" v-model="username" name="username"/>
         <div
           style="
             margin-top: 40px;
@@ -50,40 +61,27 @@ export default {
             ><a href="google.com" id="forgot-password">Quên mật khẩu?</a></span
           >
         </div>
-        <input type="password" v-model="password" />
-        <div
-          class="login-button"
-          @click="login()"
-          :style="
-            this.username && this.password
-              ? {}
-              : { color: '#E5E6EC', background: '#BDBDBD' }
-          "
-        >
-          Đăng nhập
-        </div>
+        <input type="password" v-model="password" name="password" />
+        <div class="login-button" @click="login()" 
+          :style="this.username && this.password
+                ? {}
+          : { color: '#E5E6EC', background: '#BDBDBD' }">
+            Đăng nhập
+          </div>
         <p class="login-with">hoặc đăng nhập bằng</p>
         <div
           style="
             display: flex;
             justify-content: space-around;
-            padding-top: 10px;
-          "
-        >
-          <span class="otherway"
-            ><i
-              class="fa fa-brands fa-facebook"
-              style="font-size: 16px; padding-right: 5px"
-            ></i
-            >Facebook</span
-          >
-          <span class="otherway"
-            ><i
-              class="fa fa-brands fa-google"
-              style="font-size: 16px; padding-right: 5px"
-            ></i
-            >Google</span
-          >
+            padding-top: 10px;">
+          <span class="otherway" >
+            <img src="../img/facebook.png"/>
+            Facebook
+          </span>
+          <span class="otherway">
+           <img src="../img/google.png" alt="">
+           Google
+          </span>
         </div>
         <p class="footer">
           Bạn chưa có tài khoản?
@@ -98,10 +96,10 @@ export default {
 body {
   background: #f0f2f5;
   display: flex;
-  width: 1440px;
-  padding: 156px 420px 279px 420px;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* Căn giữa theo chiều ngang */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  height: 100vh; /* Đảm bảo trang chiếm toàn bộ chiều cao của màn hình */
+  margin: 0; /* Xóa margin mặc định của body */
 }
 
 #login-form {
@@ -111,6 +109,7 @@ body {
   background: var(--light-greyscale-greyscale-200, #fff);
   box-shadow: 0px 12px 40px 0px rgba(0, 0, 0, 0.16);
 }
+
 
 .login-form-header {
   position: relative;
@@ -205,22 +204,24 @@ body {
 }
 
 .otherway {
-  flex-shrink: 0;
   border-radius: 24px;
   background: var(--light-greyscale-greyscale-300, #e5e6ec);
-
   color: var(--light-greyscale-greyscale-900, #000);
   font-family: Roboto;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  text-align: center;
-  padding: 13.02px 55px 13px 55px;
+  padding: 13px 55px;
 }
+
 
 .footer {
   margin-top: 51px;
   text-align: center;
+}
+
+#forgot-password , .footer a  {
+  text-decoration: none;
 }
 </style>

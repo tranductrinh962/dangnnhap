@@ -1,5 +1,9 @@
 {
   "devDependencies": {
     "nodemon": "^3.0.1"
+  },
+  "dependencies": {
+    "mysql": "github:mysqljs/mysql",
+    "mysql2": "^3.6.1"
   }
 }

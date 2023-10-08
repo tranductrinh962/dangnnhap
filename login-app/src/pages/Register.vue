@@ -1,126 +1,197 @@
-<script></script>
+<script>
+import { Post } from "../utils/api.js";
+
+export default {
+  name: "Register",
+  data() {
+    return {
+      fullname: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+      email: "",
+      agree: false,
+    };
+  },
+  methods: {
+    isRegisterValid() {
+      // Kiểm tra xem tất cả thông tin đã được nhập và người dùng đã đồng ý điều khoản
+      return (
+        this.fullname &&
+        this.username &&
+        this.password &&
+        this.confirmPassword &&
+        this.email &&
+        this.agree
+      );
+    },
+    async registerUser() {
+      if (!this.isRegisterValid()) {
+        alert("Vui lòng điền đầy đủ thông tin và đồng ý với điều khoản.");
+        return;
+      }
+      if (this.password !== this.confirmPassword) {
+        alert("Mật khẩu không khớp. Vui lòng nhập lại.");
+        return;
+      }
+
+      const response = await Post("register", {
+        fullname: this.fullname,
+        username: this.username,
+        password: this.password,
+        email: this.email,
+      });
+
+      if (response.msg === "Đăng ký thành công") {
+        // Đăng ký thành công, bạn có thể thực hiện các hành động sau, ví dụ: chuyển hướng đến trang đăng nhập
+        alert("Đăng ký thành công!");
+        this.$router.push("/login");
+      } else {
+        // Đăng ký thất bại, xử lý thông báo lỗi hoặc hiển thị lỗi cho người dùng
+        alert("Đăng ký thất bại: " + response.msg);
+      }
+    },
+  },
+};
+</script>
 
 <template>
-  <div id="home">
-    <div id="login-form">
-      <div class="login-form-header">
-        <span class="title-header">Đăng ký</span>
-        <span style="position: absolute; top: 19px; right: 19px">X</span>
+  <div class="register">
+    <div class="register-form">
+      <div class="register-header">
+        <h2>Đăng ký tài khoản mới miễn phí</h2>
       </div>
-      <div id="login-body">
-        <div class="label-input">Tên đăng nhập</div>
-        <input type="text" />
-        <div
-          style="
-            margin-top: 40px;
-            display: flex;
-            justify-content: space-between;
-            width: 462px;
-          "
-        >
-          <span class="label-input">Mật khẩu</span
-          ><span
-            ><a href="google.com" id="forgot-password">Quên mật khẩu?</a></span
-          >
+      <div class="register-body">
+        <div class="register-body-input">
+          <h4>Họ và tên</h4>
+          <input type="text" class="login" placeholder="Nhập họ và tên của bạn" v-model="fullname">
         </div>
-        <input type="password" />
-        <div class="login-button">Đăng nhập</div>
-        <p class="login-with">hoặc đăng nhập bằng</p>
-        <div
-          style="
-            display: flex;
-            justify-content: space-around;
-            padding-top: 10px;
-          "
-        >
-          <span class="otherway"
-            ><i
-              class="fa fa-brands fa-facebook"
-              style="font-size: 16px; padding-right: 5px"
-            ></i
-            >Facebook</span
-          >
-          <span class="otherway"
-            ><i
-              class="fa fa-brands fa-google"
-              style="font-size: 16px; padding-right: 5px"
-            ></i
-            >Google</span
-          >
+        <div class="register-body-input">
+          <h4>Tên đăng nhập</h4>
+          <input type="text" class="login" placeholder="Nhập tên đăng nhập của bạn" v-model="username">
         </div>
-        <p class="footer">
-          Bạn chưa có tài khoản? <a href="google.com">Đăng ký ngay!</a>
-        </p>
+        <div class="register-body-input password">
+          <h4>Nhập mật khẩu</h4>
+          <input type="password" class="login" v-model="password">
+        </div>
+        <div class="register-body-input password">
+          <h4>Nhập lại mật khẩu</h4>
+          <input type="password" class="login" v-model="confirmPassword">
+        </div>
+        <div class="register-body-input">
+          <h4>Email</h4>
+          <input type="email" class="login" placeholder="Nhập email của bạn" v-model="email">
+        </div>
+        <div class="register-body-input checkbox-active">
+          <input class="checkbox" type="checkbox" v-model="agree">
+          <div class="agree"> Tôi đồng ý với <a href=""> các điều kiện và điều khoản </a> của </div>
+        </div>
+        <div class="footer-register">
+          <div class="footer-items">
+            <div class="signup-button">
+              <div
+                class="signup"
+                @click="registerUser()"
+                :style="
+                  isRegisterValid()
+                    ? {}
+                    : { color: '#E5E6EC', background: '#BDBDBD' }
+                "
+              >
+                Đăng ký
+              </div>
+            </div>
+          </div>
+          <div class="footer-items">
+            <div class="signup-by">
+              <div class="signup-by-or">
+                <span> Hoặc </span>
+              </div>
+              <div class="signup-other">
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-google-plus-g"></i>
+                <i class="fab fa-apple"></i>
+              </div>
+            </div>
+          </div>
+          <div class="footer-items">
+            <p class="login-acc">Bạn đã có tài khoản ?<router-link to="/login" > Đăng nhập </router-link></p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
+
 <style>
 body {
-  background: #f0f2f5;
-  display: flex;
-  width: 1440px;
-  padding: 156px 420px 279px 420px;
-  justify-content: center;
-  align-items: center;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  height: 1050px;
 }
 
-#login-form {
+.register {
   width: 600px;
-  height: 589px;
+  height: 900px;
+  margin: 0 auto;
+  display: flex;
+  padding: 0px 16px;
+  flex-direction: column;
+  align-items: center;
   border-radius: 14px;
-  background: var(--light-greyscale-greyscale-200, #fff);
+  background: #FFF;
   box-shadow: 0px 12px 40px 0px rgba(0, 0, 0, 0.16);
 }
 
-.login-form-header {
-  position: relative;
-  max-height: 58.264px;
-  border-bottom: 1px solid #f7f7f7;
-  padding: 16px 240px 18.26px 240px;
+.register-form {
+  padding: 0 0 24px 0;
 }
 
-.title-header {
-  padding-top: 16px;
-  color: var(--light-greyscale-greyscale-900, #000);
+.register-header h2{
+  color: var(--main-text, #002352);
+  text-align: center;
   font-family: Roboto;
-  font-size: 18px;
+  font-size: 22px;
   font-style: normal;
-  font-weight: 500;
-  line-height: 24px; /* 133.333% */
-  text-transform: uppercase;
+  font-weight: 700;
 }
 
-#login-body {
-  padding: 36.74px 80px 0px 80px;
+.register-body {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
 }
 
-.label-input {
+
+.register .register-body-input h4 {
   color: var(--light-greyscale-greyscale-900, #000);
   font-family: Roboto;
   font-size: 16px;
   font-style: normal;
-  font-weight: 500;
-  line-height: 22px; /* 137.5% */
+  margin-bottom: 3px;
 }
 
-#login-body input {
+.register .register-body-input i[class*="fa-circle"] {
+  color:#C4C4C4;
+  font-size: 8px;
+}
+
+.register .register-body .login{
   display: flex;
   width: 440px;
-  height: 22px;
-  padding: 16px 15px;
+  height: 54px;
+  padding: 0px 15px;
   align-items: flex-start;
   gap: 10px;
   flex-shrink: 0;
   border-radius: 8px;
-  background: #f7f7f7;
-  border: 0px;
-}
-
-#forgot-password {
-  color: var(--dark-other-link-500, #2f80ed);
-  text-align: right;
+  background: #F7F7F7;  
+  outline: none;
+  border: none;
+  color: #BDBDBD;
   font-family: Roboto;
   font-size: 16px;
   font-style: normal;
@@ -128,59 +199,160 @@ body {
   line-height: 22px; /* 137.5% */
 }
 
-.login-button {
-  margin-top: 40px;
+.checkbox-active {
   display: flex;
-  width: 440px;
-  height: 20px;
-  padding: 15px 15px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  border-radius: 40px;
-  background: var(--Green, #00bf6f);
-  box-shadow: 0px 2px 10px 0px rgba(244, 103, 0, 0.05);
+  margin-top: 24px;
+  display: flex;
+  height: 18px;
+}
+input[type="checkbox"]{
+  accent-color: #00bf6f;
+  cursor: pointer;
+}
+.register .register-body-input .checkbox {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
 
+.register-body-input {
+  color: var(--main-text, #002352);
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 130%; /* 18.2px */
+  
+}
+
+.login-items {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.register .register-body-input a{
+  color: var(--Link, #1890FF);
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 130%;
+} 
+
+.agree {
+  margin-top: 3px;
+}
+
+.login-acc a, 
+.agree a {
+  text-decoration: none;
+  text-align: center;
+}
+.footer-register {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  display: flex;
+  width: 432px;
+  padding-top: 24px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  /* gap: 24px; */
+}
+
+.footer-register .footer-items .signup{
+  display: flex;
+  width: 460px;
+  justify-content: center;
+  height: 50px;
+  border-radius: 40px;
+  border: none;
   color: var(--light-text-active, #fff);
   text-align: center;
-  /* GG/16px/Med/Button Text */
+  font-family: Roboto;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 50px;
+  background: var(--Green, #00bf6f);
+  cursor: pointer;
+}
+
+.footer-register .signup-by{
+  width: 440px;
+}
+
+.footer-register .signup-by-or {
+  position: relative;
+  border-top: 1px solid #EEE;
+  width: 300px;
+  margin: auto;
+  margin-top: 24px;
+  
+}
+
+.footer-register .signup-by-or span {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  z-index: 1;
+  text-align: center;
+  transform: translateX(-50%);
+  color: var(--main-text, #002352);
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 130%; /* 18.2px */
+  background: #fff;
+  width: 53px;
+  height: 18px;
+}
+
+.footer-register .signup-other {
+  left: 50%;
+  gap: 16px;
+  height: 44px;
+  margin-top: 24px;
+  position: relative;
+  align-items: center;
+  display: inline-flex;
+  transform: translateX(-50%);
+}
+
+.footer .signup-other i[class*="fa-brands"] {
+  font-size: 25px;
+  line-height: 2.2;
+  gap: 3px;
+  width: 28px;
+  height: 28px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  background: #FFF;
+  border-radius: 100px;
+  justify-content: center;
+  border: 1px solid var(--border-input, #c8c3c3);
+}
+.footer-register .login-acc{
+  color: var(--main-text, #002352);
+  text-align: center;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 130%; /* 20.8px */
+  width: 432px;
+}
+
+.footer-register .login-acc a{ 
+  color: var(--Link, #1890FF);
   font-family: Roboto;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: normal;
-}
+  line-height: 130%;
 
-.login-with {
-  margin-top: 30px;
-  color: var(--light-transparent-greyscale-65, rgba(0, 0, 0, 0.65));
-  text-align: center;
-  font-family: Roboto;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: 0.192px;
-}
-
-.otherway {
-  flex-shrink: 0;
-  border-radius: 24px;
-  background: var(--light-greyscale-greyscale-300, #e5e6ec);
-
-  color: var(--light-greyscale-greyscale-900, #000);
-  font-family: Roboto;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  text-align: center;
-  padding: 13.02px 55px 13px 55px;
-}
-
-.footer {
-  margin-top: 51px;
-  text-align: center;
 }
 </style>
